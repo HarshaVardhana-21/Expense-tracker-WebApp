@@ -28,6 +28,7 @@ Single-page React app: no router and no backend. State persists to `localStorage
 ## Styling rules
 
 - The design tokens live in `src/styles/globals.css`: the light palette on `:root`, overridden under `@media (prefers-color-scheme: dark)` guarded by `:root:not([data-theme="light"])`, and again under `:root[data-theme="dark"]`. The shadcn variable names (`--primary`, `--card`, `--border`, `--input`, `--muted-foreground`, …) *are* the design tokens. `@custom-variant dark` follows the same three theme states.
+- Theme switching (`src/theme/`) never touches colours. `ThemeProvider` only sets or removes `data-theme` on `<html>`, and saves the choice to `localStorage` under `ledgerline:theme`. The inline script in `index.html` does the same before first paint so the page doesn't flash the wrong theme. If you change one, change the other.
 - Category colour is passed to components as an inline `--c` custom property, e.g. `bg-[var(--c)]` or the `.code-chip` class.
 - The components use Tailwind utilities with exact pixel values, ported from `legacy/index.html`. Only a few multi-property or pseudo-element rules live in `@layer components`: `.receipt-edge`, `.ledger-page::before`, `.big-amount`, `.bar-over`, `.code-chip`, `.eyebrow` and `.chart-axis`.
 - React is 18, so function components don't receive `ref` as a prop. The shadcn primitives here don't use `forwardRef`; focus fields by `id` instead.

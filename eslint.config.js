@@ -24,7 +24,7 @@ export default tseslint.config(
   },
   {
     // shadcn primitives export variants alongside components; stores export provider + hook together.
-    files: ['src/components/ui/**/*.tsx', 'src/store/**/*.tsx'],
+    files: ['src/components/ui/**/*.tsx', 'src/store/**/*.tsx', 'src/theme/**/*.tsx'],
     rules: { 'react-refresh/only-export-components': 'off' },
   },
 )

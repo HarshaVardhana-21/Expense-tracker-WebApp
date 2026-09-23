@@ -10,6 +10,7 @@ import { notify } from '@/lib/notify'
 import { cn } from '@/lib/utils'
 import { useExpenseDispatch, useExpenseState } from '@/store/expense-store'
 import { useView } from '@/store/view-store'
+import { ThemeMenu } from './ThemeMenu'
 
 export function TopBar() {
   const { currency } = useExpenseState()
@@ -63,6 +64,8 @@ export function TopBar() {
             ))}
           </SelectContent>
         </Select>
+
+        <ThemeMenu />
 
         <Button onClick={() => openSheet()}>
           <PlusIcon />
