@@ -19,9 +19,14 @@ function DialogClose({ ...props }: React.ComponentProps<typeof DialogPrimitive.C
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
 }
 
-function DialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
+// forwardRef: Radix Presence (inside DialogPortal) attaches a ref to run the exit animation.
+const DialogOverlay = React.forwardRef<
+  React.ComponentRef<typeof DialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(function DialogOverlay({ className, ...props }, ref) {
   return (
     <DialogPrimitive.Overlay
+      ref={ref}
       data-slot="dialog-overlay"
       className={cn(
         'fixed inset-0 z-50 bg-[rgb(8_12_10/0.5)] backdrop-blur-[3px]',
@@ -31,7 +36,7 @@ function DialogOverlay({ className, ...props }: React.ComponentProps<typeof Dial
       {...props}
     />
   )
-}
+})
 
 /** Unstyled, centred dialog panel — the caller supplies the surface (see ExpenseSheet). */
 function DialogContent({ className, children, ...props }: React.ComponentProps<typeof DialogPrimitive.Content>) {

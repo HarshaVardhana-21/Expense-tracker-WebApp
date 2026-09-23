@@ -30,20 +30,22 @@ const buttonVariants = cva(
   },
 )
 
-function Button({
-  className,
-  variant = 'default',
-  size = 'default',
-  asChild = false,
-  ...props
-}: React.ComponentProps<'button'> &
+type ButtonProps = React.ComponentPropsWithoutRef<'button'> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
-  }) {
+  }
+
+// forwardRef is required on React 18: Radix `asChild` triggers (DropdownMenuTrigger, DialogClose)
+// attach a ref to their child to anchor popovers and restore focus.
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { className, variant = 'default', size = 'default', asChild = false, ...props },
+  ref,
+) {
   const Comp = asChild ? Slot.Root : 'button'
 
   return (
     <Comp
+      ref={ref}
       data-slot="button"
       data-variant={variant}
       data-size={size}
@@ -51,6 +53,6 @@ function Button({
       {...props}
     />
   )
-}
+})
 
 export { Button, buttonVariants }
