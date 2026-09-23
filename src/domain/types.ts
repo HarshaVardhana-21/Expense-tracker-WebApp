@@ -33,7 +33,13 @@ export type Budgets = Record<CategoryKey, number>
 
 export interface AppState {
   currency: Currency
+  /** Base budget: applies to every month before the first entry in `monthBudgets`. */
   budgets: Budgets
+  /**
+   * Budgets set for a specific month (`YYYY-MM`). A month without an entry uses the most
+   * recent earlier entry, so a budget carries forward until it is changed again.
+   */
+  monthBudgets: Record<string, Budgets>
   expenses: Expense[]
 }
 

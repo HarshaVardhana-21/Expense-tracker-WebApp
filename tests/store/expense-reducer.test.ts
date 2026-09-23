@@ -15,6 +15,7 @@ const e = (id: string, extra: Partial<Expense> = {}): Expense => ({
 const base = (): AppState => ({
   currency: 'USD',
   budgets: defaultBudgets('USD'),
+  monthBudgets: {},
   expenses: [e('a', { sample: true }), e('b'), e('c', { sample: true })],
 })
 
@@ -48,6 +49,17 @@ describe('expenseReducer', () => {
     s = expenseReducer(s, { type: 'setCurrency', currency: 'EUR' })
     expect(s.currency).toBe('EUR')
     expect(s.expenses[0].amount).toBe(10)
+  })
+
+  it('sets a month budget and undoes it by restoring the plan', () => {
+    const start = base()
+    const sep = { ...start.budgets, dining: 999 }
+    const s1 = expenseReducer(start, { type: 'setMonthBudgets', ym: '2026-09', budgets: sep, scope: 'onward' })
+    expect(s1.monthBudgets['2026-09'].dining).toBe(999)
+    expect(s1.budgets).toEqual(start.budgets)
+
+    const s2 = expenseReducer(s1, { type: 'restoreBudgetPlan', budgets: start.budgets, monthBudgets: start.monthBudgets })
+    expect(s2.monthBudgets).toEqual({})
   })
 
   it('does not mutate the previous state', () => {

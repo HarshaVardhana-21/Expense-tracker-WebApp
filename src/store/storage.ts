@@ -33,10 +33,18 @@ export function initialState(): AppState {
   const state: AppState = stored ?? {
     currency,
     budgets: defaultBudgets(currency),
+    monthBudgets: {},
     expenses: seedExpenses(currency),
   }
   const defaults = defaultBudgets(state.currency)
-  const budgets = { ...(state.budgets ?? {}) } as AppState['budgets']
-  for (const c of CATEGORIES) if (typeof budgets[c.key] !== 'number') budgets[c.key] = defaults[c.key]
-  return { ...state, budgets }
+  const fill = (b: Partial<AppState['budgets']> | undefined) => {
+    const out = { ...(b ?? {}) } as AppState['budgets']
+    for (const c of CATEGORIES) if (typeof out[c.key] !== 'number') out[c.key] = defaults[c.key]
+    return out
+  }
+  // Data saved before per-month budgets has no `monthBudgets`: its single budget becomes the base.
+  const monthBudgets = Object.fromEntries(
+    Object.entries(state.monthBudgets ?? {}).map(([ym, b]) => [ym, fill(b)]),
+  )
+  return { ...state, budgets: fill(state.budgets), monthBudgets }
 }

@@ -1,4 +1,6 @@
+import { Button } from '@/components/ui/button'
 import { monthStatus, paceOf, previousPeriodTotal, projectedTotal } from '@/domain/selectors'
+import { MonthlyBudgetDialog } from '@/features/budgets/components/MonthlyBudgetDialog'
 import { useMoney } from '@/hooks/use-money'
 import { useMonthData } from '@/hooks/use-month-data'
 import { daysInMonth, formatMonth, monthLong, monthShort, parseDate } from '@/lib/dates'
@@ -38,6 +40,13 @@ export function MonthSummary() {
       <div className="flex flex-wrap items-center gap-2.5">
         <span className="eyebrow">{m.isCurrent ? `Spent so far in ${monthName}` : `Spent in ${monthName}`}</span>
         <StatusPill status={monthStatus(m, budget)} />
+        <MonthlyBudgetDialog
+          trigger={
+            <Button variant="outline" size="xs" className="ml-auto">
+              Change budget
+            </Button>
+          }
+        />
       </div>
 
       <p className="big-amount m-0 font-display text-[clamp(52px,8.5vw,88px)] leading-[0.92] font-extrabold tracking-[-0.045em] tabular-nums">

@@ -16,6 +16,12 @@ Environment: Windows, PowerShell 5.1. There is no `gh` CLI and no browser tool, 
 Single-page React app: no router and no backend. State persists to `localStorage` under the key `ledgerline:v1`.
 
 - `src/domain/`: pure logic, with no React. It holds the types, the category table (`categories.ts`, including the three-letter codes and the `--cat-N` colour tokens), the deterministic example-data generator (`seed.ts`, which uses a fixed-seed mulberry32 so the examples are identical on every load), and every derived figure in `selectors.ts`: `monthData`, the projection that leaves rent out of the extrapolation, month status, the category flags, `ledgerGroups` and `niceStep`. Put new calculations here and test them in `tests/domain/`.
+- **Budgets are per month** (`domain/budgets.ts`). `AppState.budgets` is the base, and `AppState.monthBudgets[YYYY-MM]` holds the months that have their own budget.
+  - **Lookup:** a month uses its own entry if it has one, else the most recent earlier entry, else the base. So a budget carries forward and never backward. Always read budgets with `budgetsFor(state, ym)`; `useMonthData()` already returns them for the month in view. Never read `state.budgets` directly.
+  - **Changing a month:** `applyMonthBudgets` takes a scope. `month` changes only that month and pins the following month to its old value. `onward` also applies to later months and drops their entries. Earlier months never change. `defaultScope` picks `onward` for the current month and `month` for past months.
+  - **Totals:** a month's total is the sum of its categories (`totalBudget`). "Change budget" and "Set total" (`MonthlyBudgetDialog`) use `scaleBudgets`, which splits the new total by each category's current share. "Edit budgets" (`BudgetEditor`) edits each category directly. Both use the same `BudgetScopePicker`.
+  - **Undo:** undo restores the whole plan with `restoreBudgetPlan`.
+  - **Old saved data:** data saved before per-month budgets has no `monthBudgets`; `initialState` fills in `{}`.
 - `src/store/`: two React contexts.
   - `expense-store.tsx` holds the persisted data: `useReducer(expenseReducer)`, saved on every change. Its actions are in `expense-reducer.ts`.
   - `view-store.tsx` holds what the viewer is looking at: the month in view, the category filter, the search text, and whether the entry sheet is open. It is not persisted, and `today` is fixed when the app mounts.

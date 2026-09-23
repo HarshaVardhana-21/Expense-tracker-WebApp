@@ -1,9 +1,11 @@
 import { useState, type FormEvent } from 'react'
+import { AmountField } from '@/components/form/AmountField'
 import { CloseIcon } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { budgetsFor } from '@/domain/budgets'
 import { CATEGORY_BY_KEY } from '@/domain/categories'
 import { categoryLeft } from '@/domain/selectors'
 import { PAYMENT_METHODS, type CategoryKey, type Expense, type PaymentMethod } from '@/domain/types'
@@ -13,7 +15,6 @@ import { currencySymbol, formatMoney, parseAmount } from '@/lib/money'
 import { notify } from '@/lib/notify'
 import { useExpenseDispatch, useExpenseState } from '@/store/expense-store'
 import { useView } from '@/store/view-store'
-import { AmountField } from './AmountField'
 import { CategoryPicker } from './CategoryPicker'
 
 /** The add / edit dialog, styled as a torn-off receipt. */
@@ -37,7 +38,8 @@ export function ExpenseSheet() {
 }
 
 function EntryForm({ editing }: { editing: Expense | null }) {
-  const { expenses, budgets, currency } = useExpenseState()
+  const state = useExpenseState()
+  const { expenses, currency } = state
   const dispatch = useExpenseDispatch()
   const { today, ym, filter, setYm, closeSheet } = useView()
   const todayIso = toIso(today)
@@ -54,9 +56,10 @@ function EntryForm({ editing }: { editing: Expense | null }) {
   const money = (n: number) => formatMoney(n, currency)
   const entryNo = editing ? expenses.findIndex((e) => e.id === editing.id) + 1 : expenses.length + 1
 
+  // Measured against the budget of the month the expense is dated in.
+  const entryYm = (date || todayIso).slice(0, 7)
   const left =
-    categoryLeft(expenses, budgets, cat, (date || todayIso).slice(0, 7), editing?.id ?? null) -
-    (parseAmount(amount) || 0)
+    categoryLeft(expenses, budgetsFor(state, entryYm), cat, entryYm, editing?.id ?? null) - (parseAmount(amount) || 0)
 
   const fail = (msg: string, focusId?: string) => {
     setError(msg)

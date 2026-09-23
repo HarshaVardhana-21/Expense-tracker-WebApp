@@ -1,3 +1,4 @@
+import { applyMonthBudgets, type BudgetScope } from '@/domain/budgets'
 import type { AppState, Budgets, Currency, Expense } from '@/domain/types'
 
 export type ExpenseAction =
@@ -9,7 +10,12 @@ export type ExpenseAction =
   | { type: 'clearSamples' }
   | { type: 'replaceExpenses'; expenses: Expense[] }
   | { type: 'setCurrency'; currency: Currency }
+  /** Merge into the base budget (months before any month-specific budget). */
   | { type: 'setBudgets'; budgets: Partial<Budgets> }
+  /** Set one month's category budgets, for that month only or carried onward. */
+  | { type: 'setMonthBudgets'; ym: string; budgets: Budgets; scope: BudgetScope }
+  /** Replace the whole budget plan (undo). */
+  | { type: 'restoreBudgetPlan'; budgets: Budgets; monthBudgets: Record<string, Budgets> }
 
 export function expenseReducer(state: AppState, action: ExpenseAction): AppState {
   switch (action.type) {
@@ -35,5 +41,9 @@ export function expenseReducer(state: AppState, action: ExpenseAction): AppState
       return { ...state, currency: action.currency }
     case 'setBudgets':
       return { ...state, budgets: { ...state.budgets, ...action.budgets } }
+    case 'setMonthBudgets':
+      return { ...state, ...applyMonthBudgets(state, action.ym, action.budgets, action.scope) }
+    case 'restoreBudgetPlan':
+      return { ...state, budgets: action.budgets, monthBudgets: action.monthBudgets }
   }
 }

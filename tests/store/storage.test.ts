@@ -26,4 +26,11 @@ describe('storage', () => {
     expect(s.budgets.dining).toBe(1)
     expect(s.budgets.groceries).toBe(450)
   })
+
+  it('upgrades data saved before per-month budgets', () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ currency: 'USD', budgets: { dining: 7 }, expenses: [] }))
+    const s = initialState()
+    expect(s.monthBudgets).toEqual({})
+    expect(s.budgets.dining).toBe(7)
+  })
 })
