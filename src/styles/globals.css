@@ -1,0 +1,298 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@fontsource-variable/bricolage-grotesque/index.css';
+@import '@fontsource-variable/figtree/index.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+
+/*
+ * Theme has three states: explicit data-theme="light" | "dark" on <html>, or none (follow the OS).
+ * `dark:` utilities must match the same rule as the token blocks below.
+ */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme='light']) *) {
+      @slot;
+    }
+  }
+  &:where([data-theme='dark'], [data-theme='dark'] *) {
+    @slot;
+  }
+}
+
+/* ---------- tokens (light) ---------- */
+:root {
+  --background: #ecefea; /* paper ground */
+  --foreground: #17201b; /* ink */
+  --card: #fafbf8;
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --secondary: #f1f4ef;
+  --secondary-foreground: var(--foreground);
+  --muted: var(--secondary);
+  --muted-foreground: #6c776f;
+  --ink-2: #46514b;
+  --border: #d6dcd4; /* rule */
+  --input: #b7c0b6; /* strong rule */
+  --ledger: #d3e3d8; /* ledger row ruling */
+  --margin: #e3a89f; /* ledger margin rule */
+  --primary: #2b3f9c; /* fountain-pen ink */
+  --primary-hover: #22337f;
+  --primary-foreground: #ffffff;
+  --primary-soft: #e2e6f5;
+  --ring: var(--primary);
+  --accent: color-mix(in srgb, var(--primary) 8%, var(--card));
+  --accent-foreground: var(--foreground);
+  --good: #2c774b;
+  --warn: #95600f;
+  --destructive: #b23c28;
+  --cat-0: #3f8f5b;
+  --cat-1: #cc6a33;
+  --cat-2: #3a6fb3;
+  --cat-3: #6a5ab2;
+  --cat-4: #23929a;
+  --cat-5: #be4a79;
+  --cat-6: #a88a1f;
+  --cat-7: #72852a;
+  --cat-8: #2f6272;
+  --cat-9: #777b84;
+  --lift: 0 1px 0 rgb(23 32 27 / 0.04), 0 10px 28px -14px rgb(23 32 27 / 0.22);
+  --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --background: #111513;
+    --foreground: #e6ece7;
+    --card: #191e1b;
+    --secondary: #202622;
+    --muted-foreground: #88938b;
+    --ink-2: #b4beb7;
+    --border: #2b332e;
+    --input: #3d4741;
+    --ledger: #223329;
+    --margin: #5e3530;
+    --primary: #93a6f4;
+    --primary-hover: #aebdf8;
+    --primary-foreground: #0d1433;
+    --primary-soft: #232b4c;
+    --good: #6fc393;
+    --warn: #e3aa4d;
+    --destructive: #f07f68;
+    --cat-0: #6fc08a;
+    --cat-1: #f09a64;
+    --cat-2: #7ea9e6;
+    --cat-3: #a596ea;
+    --cat-4: #5ccbd0;
+    --cat-5: #eb85ae;
+    --cat-6: #ddbf5a;
+    --cat-7: #b3c65c;
+    --cat-8: #80b2c4;
+    --cat-9: #a6aab1;
+    --lift: 0 1px 0 rgb(0 0 0 / 0.3), 0 12px 30px -14px rgb(0 0 0 / 0.6);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --background: #111513;
+  --foreground: #e6ece7;
+  --card: #191e1b;
+  --secondary: #202622;
+  --muted-foreground: #88938b;
+  --ink-2: #b4beb7;
+  --border: #2b332e;
+  --input: #3d4741;
+  --ledger: #223329;
+  --margin: #5e3530;
+  --primary: #93a6f4;
+  --primary-hover: #aebdf8;
+  --primary-foreground: #0d1433;
+  --primary-soft: #232b4c;
+  --good: #6fc393;
+  --warn: #e3aa4d;
+  --destructive: #f07f68;
+  --cat-0: #6fc08a;
+  --cat-1: #f09a64;
+  --cat-2: #7ea9e6;
+  --cat-3: #a596ea;
+  --cat-4: #5ccbd0;
+  --cat-5: #eb85ae;
+  --cat-6: #ddbf5a;
+  --cat-7: #b3c65c;
+  --cat-8: #80b2c4;
+  --cat-9: #a6aab1;
+  --lift: 0 1px 0 rgb(0 0 0 / 0.3), 0 12px 30px -14px rgb(0 0 0 / 0.6);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-ink-2: var(--ink-2);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ledger: var(--ledger);
+  --color-margin: var(--margin);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-ring: var(--ring);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --color-destructive: var(--destructive);
+
+  --font-display: 'Bricolage Grotesque Variable', 'Figtree Variable', system-ui, sans-serif;
+  --font-sans: 'Figtree Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  --shadow-lift: var(--lift);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+
+  --animate-rise: rise 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  @keyframes rise {
+    from {
+      transform: translateY(16px);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+}
+
+@layer base {
+  html {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font: 15px/1.5 var(--font-sans);
+    padding-inline: 16px;
+    padding-block: 0 64px;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: default;
+  }
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+/* The handful of rules that read better as CSS than as utilities. */
+@layer components {
+  .eyebrow {
+    font: 600 11px/1.2 var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  /* Big spent figure: currency symbol raised, fraction muted. */
+  .big-amount .cur {
+    font-size: 0.42em;
+    vertical-align: 0.95em;
+    letter-spacing: 0;
+    color: var(--muted-foreground);
+    font-weight: 600;
+    margin-right: 0.08em;
+  }
+  .big-amount .frac {
+    color: var(--muted-foreground);
+    font-size: 0.5em;
+    letter-spacing: -0.02em;
+  }
+
+  /* Category tint: set --c on the element. */
+  .code-chip {
+    font: 600 11px/1 var(--font-mono);
+    letter-spacing: 0.06em;
+    padding: 5px 6px;
+    border-radius: 6px;
+    min-width: 40px;
+    text-align: center;
+    color: var(--c);
+    background: color-mix(in srgb, var(--c) 13%, transparent);
+    border: 1px solid color-mix(in srgb, var(--c) 28%, transparent);
+  }
+
+  /* The double red margin rule of a ledger page. */
+  .ledger-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 62px;
+    width: 5px;
+    border-left: 1px solid var(--margin);
+    border-right: 1px solid var(--margin);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  @media (max-width: 560px) {
+    .ledger-page::before {
+      left: 48px;
+    }
+  }
+
+  .bar-over {
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--destructive) 0 4px,
+      color-mix(in srgb, var(--destructive) 70%, transparent) 4px 8px
+    );
+  }
+
+  /* Torn-receipt zigzag along the bottom edge. */
+  .receipt-edge {
+    -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%;
+    mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%;
+  }
+
+  .chart-axis {
+    fill: var(--muted-foreground);
+    font: 11px var(--font-mono);
+  }
+
+  kbd {
+    font: 500 11px var(--font-mono);
+    padding: 1px 5px;
+    border-radius: 4px;
+    border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
